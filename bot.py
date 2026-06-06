@@ -89,25 +89,27 @@ def guardar_proveedor(datos):
 #para 'dar de baja' a un proveedor (de activo a inactivo)
 def dar_baja_proveedor(cuit):
     wb = openpyxl.load_workbook(ARCHIVO_EXCEL) #abrimos el excel
-    hoja = wb[HOJA] #seleccionamos la hoja
-    for fila in hoja.iter_rows(min_row = 2): #recorremos las filas
+    #seleccionamos la hoja
+    hoja = wb[HOJA] 
+    #recorremos las filas
+    for fila in hoja.iter_rows(min_row = 2):
         if str(fila[2].value) == cuit:
-            if fila[7].value == "inactivo":  #verificamos que el proveedor no esté inactivo de antemano
-                print("Este proveedor ya está dado de baja.")
-                return
-            print("\n---Proveedor encontrado.") #de lo contrario, damos sus datos aal usuario
+            #damos los datos al usuario para que lo visualice a la hora de la confirmación.
+            print("\n---Proveedor encontrado.") 
             print(f"  Nombre:   {fila[1].value}")
             print(f"  CUIT:     {fila[2].value}")
             print(f"  Rubro:    {fila[3].value}")
             print(f"  Contacto: {fila[4].value}")
             print("---------------------------")
+            
             #hacemos una confirmación breve por si el usuario se equivocó
             while True:
                 confirmar = input("¿Confirmás la baja? (s/n): ").strip().lower()
+                # en caso de 's', se elimina al proveedor completamente
                 if confirmar == "s":
-                    fila[7].value = "inactivo"  #el proveedor pasa de activo a inactivo
+                    hoja.delete_rows(fila[0].row)
                     wb.save(ARCHIVO_EXCEL)
-                    print("Proveedor dado de baja exitosamente.")
+                    print("Proveedor eliminado del sistema exitosamente.")
                     return
                 elif confirmar == "n":
                     print("Operación cancelada.")
@@ -118,14 +120,21 @@ def dar_baja_proveedor(cuit):
 #en lugar de borrar al proveedor, lo pasamos de activo a inactivo, así queda en los datos para futuras referencias.
 
 #para reactivar un proveedor (de inactivo a activo)
-def reactivar_proveedor(cuit):
-    wb = openpyxl.load_workbook(ARCHIVO_EXCEL) #abrimos el excel
-    hoja = wb[HOJA] #seleccionamos la hoja
-    for fila in hoja.iter_rows(min_row=2): #recorremos las filas
+def cambiar_estados_proveedor(cuit):
+    #abrimos el excel
+    wb = openpyxl.load_workbook(ARCHIVO_EXCEL) 
+    #seleccionamos la hoja
+    hoja = wb[HOJA] 
+    #recorremos las filas
+    for fila in hoja.iter_rows(min_row=2):
         if str(fila[2].value) == cuit:
-            if fila[7].value == "activo":  #verificamos que el proveedor no esté ya activo
-                print("Este proveedor ya se encuentra activo.")
-                return
+            estado_actual = fila[7].value
+            if estado_actual == "activo":
+                nuevo_estado = "inactivo"
+            else:
+                nuevo_estado = "activo" 
+            
+            #mostramos en pantalla al proveedor.
             print("\n---Proveedor encontrado.")
             print(f"  Nombre:   {fila[1].value}")
             print(f"  CUIT:     {fila[2].value}")
@@ -133,13 +142,15 @@ def reactivar_proveedor(cuit):
             print(f"  Contacto: {fila[4].value}")
             print(f"  Estado:   {fila[7].value}")
             print("---------------------------")
+            
             #confirmación antes de reactivar
             while True:
                 confirmar = input("¿Confirmás la reactivación? (s/n): ").strip().lower()
                 if confirmar == "s":
-                    fila[7].value = "activo"  #el proveedor vuelve a activo
+                    #cambiamos el estado del proveedor al estado contrario.
+                    fila[7].value = nuevo_estado  
                     wb.save(ARCHIVO_EXCEL)
-                    print("Proveedor reactivado exitosamente.")
+                    print(f"\nEstado cambiado a '{nuevo_estado}' exitosamente.")
                     return
                 elif confirmar == "n":
                     print("Operación cancelada.")
@@ -307,10 +318,11 @@ def menu():
                     continue
                 dar_baja_proveedor(cuit)
                 break
+        
         #reactivación de un proveedor dado de baja
         elif opcion == "3":
             while True:
-                cuit_input = input("Ingresá el CUIT del proveedor a reactivar: ").strip()
+                cuit_input = input("Ingresá el CUIT del proveedor a cambiar su estado: ").strip()
                 if cuit_input.lower() == "salir":
                     print("Operación cancelada.")
                     break
@@ -318,8 +330,10 @@ def menu():
                 if not cuit:
                     print("CUIT inválido. Debe tener 11 dígitos numéricos.")
                     continue
-                reactivar_proveedor(cuit)
+                cambiar_estados_proveedor(cuit)
                 break
+        
+        #mostrar lista proveedores
         elif opcion == '4':
             mostrar_proveedores()
         else:
