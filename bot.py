@@ -1,7 +1,7 @@
 '''Trabajo Practico Integrador. Organización Empresarial.
 ChatBot para alta de proveedores.
-(Apellido y nombre de Muriel)
-Pisano Di Filippo Mateo Agustín'''
+Heinzle Muriel Amancay. Comisión 8
+Pisano Di Filippo Mateo Agustín. Comisión 8'''
 
 
 #Importamos la libreria para poder manejar archivos excel
@@ -86,46 +86,56 @@ def guardar_proveedor(datos):
     #guardamos los cambios
     wb.save(ARCHIVO_EXCEL)
 
-#para 'dar de baja' a un proveedor (de activo a inactivo)
+#para 'dar de baja' a un proveedor
 def dar_baja_proveedor(cuit):
-    wb = openpyxl.load_workbook(ARCHIVO_EXCEL) #abrimos el excel
-    hoja = wb[HOJA] #seleccionamos la hoja
-    for fila in hoja.iter_rows(min_row = 2): #recorremos las filas
+    #abrimos el excel
+    wb = openpyxl.load_workbook(ARCHIVO_EXCEL) 
+    #seleccionamos la hoja
+    hoja = wb[HOJA] 
+    #recorremos las filas
+    for fila in hoja.iter_rows(min_row = 2):
         if str(fila[2].value) == cuit:
-            if fila[7].value == "inactivo":  #verificamos que el proveedor no esté inactivo de antemano
-                print("Este proveedor ya está dado de baja.")
-                return
-            print("\n---Proveedor encontrado.") #de lo contrario, damos sus datos aal usuario
+            #damos los datos al usuario para que lo visualice a la hora de la confirmación.
+            print("\n---Proveedor encontrado.") 
             print(f"  Nombre:   {fila[1].value}")
             print(f"  CUIT:     {fila[2].value}")
             print(f"  Rubro:    {fila[3].value}")
             print(f"  Contacto: {fila[4].value}")
             print("---------------------------")
+            
             #hacemos una confirmación breve por si el usuario se equivocó
             while True:
                 confirmar = input("¿Confirmás la baja? (s/n): ").strip().lower()
+                # en caso de 's', se elimina al proveedor completamente
                 if confirmar == "s":
-                    fila[7].value = "inactivo"  #el proveedor pasa de activo a inactivo
+                    hoja.delete_rows(fila[0].row)
                     wb.save(ARCHIVO_EXCEL)
-                    print("Proveedor dado de baja exitosamente.")
+                    print("Proveedor eliminado del sistema exitosamente.")
                     return
                 elif confirmar == "n":
                     print("Operación cancelada.")
                     return
                 else:
                     print("Ingresá 's' para confirmar o 'n' para cancelar.")
-    print("No se encontró ningún proveedor con ese CUIT.") #en el caso de que el cuit sea incorrecto
-#en lugar de borrar al proveedor, lo pasamos de activo a inactivo, así queda en los datos para futuras referencias.
+    #en el caso de que el cuit sea incorrecto
+    print("No se encontró ningún proveedor con ese CUIT.") 
 
-#para reactivar un proveedor (de inactivo a activo)
-def reactivar_proveedor(cuit):
-    wb = openpyxl.load_workbook(ARCHIVO_EXCEL) #abrimos el excel
-    hoja = wb[HOJA] #seleccionamos la hoja
-    for fila in hoja.iter_rows(min_row=2): #recorremos las filas
+#para cambiar de estado al proveedor (de activo a inactivo y viceversa)
+def cambiar_estados_proveedor(cuit):
+    #abrimos el excel
+    wb = openpyxl.load_workbook(ARCHIVO_EXCEL) 
+    #seleccionamos la hoja
+    hoja = wb[HOJA] 
+    #recorremos las filas
+    for fila in hoja.iter_rows(min_row=2):
         if str(fila[2].value) == cuit:
-            if fila[7].value == "activo":  #verificamos que el proveedor no esté ya activo
-                print("Este proveedor ya se encuentra activo.")
-                return
+            estado_actual = fila[7].value
+            if estado_actual == "activo":
+                nuevo_estado = "inactivo"
+            else:
+                nuevo_estado = "activo" 
+            
+            #mostramos en pantalla al proveedor.
             print("\n---Proveedor encontrado.")
             print(f"  Nombre:   {fila[1].value}")
             print(f"  CUIT:     {fila[2].value}")
@@ -133,13 +143,15 @@ def reactivar_proveedor(cuit):
             print(f"  Contacto: {fila[4].value}")
             print(f"  Estado:   {fila[7].value}")
             print("---------------------------")
-            #confirmación antes de reactivar
+            
+            #confirmación antes de cambiar de estado
             while True:
-                confirmar = input("¿Confirmás la reactivación? (s/n): ").strip().lower()
+                confirmar = input("¿Confirmás la acción? (s/n): ").strip().lower()
                 if confirmar == "s":
-                    fila[7].value = "activo"  #el proveedor vuelve a activo
+                    #cambiamos el estado del proveedor al estado contrario.
+                    fila[7].value = nuevo_estado  
                     wb.save(ARCHIVO_EXCEL)
-                    print("Proveedor reactivado exitosamente.")
+                    print(f"\nEstado cambiado a '{nuevo_estado}' exitosamente.")
                     return
                 elif confirmar == "n":
                     print("Operación cancelada.")
@@ -154,7 +166,7 @@ def alta_proveedor():
     datos = {}
  #nombre
     while True:
-        nombre = input("Nombre o razón social del proveedor: ").strip()
+        nombre = input("Nombre o razón social del proveedor: ").strip().title()
         if nombre.lower() == "salir":
             print("Operación cancelada.")
             return
@@ -180,7 +192,7 @@ def alta_proveedor():
         break
 #rubro
     while True:
-        rubro = input("Rubro: ").strip()
+        rubro = input("Rubro: ").strip().title()
         if rubro.lower() == "salir":
             print("Operación cancelada.")
             return
@@ -191,7 +203,7 @@ def alta_proveedor():
         break
 #contacto
     while True:
-        contacto = input("Nombre de la persona de contacto: ").strip()
+        contacto = input("Nombre de la persona de contacto: ").strip().title()
         if contacto.lower() == "salir":
             print("Operación cancelada.")
             return
@@ -248,7 +260,7 @@ def alta_proveedor():
 def mostrar_proveedores():
     proveedores = cargar_proveedores() 
     if len(proveedores) == 0:
-        print("No hay proveedores cargados en el sistema.")
+        print('No hay proveedores cargados en el sistema.')
         return
     print('''---Lista de Proveedores---''') 
     for p in proveedores: #recorremos el archivo con un for
@@ -263,6 +275,124 @@ Teléfono:     {p['telefono']}
 Estado:       {p['estado']}
 Fecha de alta:{p['fecha_alta']}
 ---------------------------""")
+
+#función para subplir la falla de que solo se busca por CUIT(ahora se podrá buscar por nombre)
+def buscar_por_nombre(nombre_busqueda):
+    proveedores = cargar_proveedores()
+    
+    #recorremos provedores
+    for i in proveedores:
+        if nombre_busqueda.lower() in i['nombre'].lower():
+            return i['cuit']
+    #en caso de que el nombre no esté en la lista
+    print('\nNo se encontró ningún proveedor con ese nombre.')
+    return None
+
+#función para ver un solo proveedor por vez ingresando nombre o cuit
+def ver_proveedor():
+    while True:
+        cuit_nombre = input('\nIngresá el CUIT o nombre del proveedor a buscar: ').strip()        
+        if cuit_nombre.lower() == 'salir':
+                print('\nOperación cancelada.')
+                break
+         #verificamos si es el cuit o el nombre. en caso de ser digit, lo va a tomar como cuit, en caso contrario, como un nombre
+        if cuit_nombre.replace('-','').replace(' ','').isdigit():
+            #llamamos a la función de validacion de cuit
+            cuit = validar_cuit(cuit_nombre)
+            #si el cuit no existe
+            if not cuit:
+                print("CUIT inválido. Debe tener 11 dígitos numéricos.")
+                continue
+            #en caso de que se busque por nombre
+        else:
+            cuit = buscar_por_nombre(cuit_nombre)
+            if not cuit:
+                return
+        break
+#buscamos en la lista e imprimimos
+    proveedores = cargar_proveedores()
+    for i in proveedores:
+        if i["cuit"] == cuit:
+            print(f"""
+ID:           {i['id']}
+Nombre:       {i['nombre']}
+CUIT:         {i['cuit']}
+Rubro:        {i['rubro']}
+Contacto:     {i['contacto']}
+Email:        {i['email']}
+Teléfono:     {i['telefono']}
+Estado:       {i['estado']}
+Fecha de alta:{i['fecha_alta']}
+""")
+            return
+    #en el caso de no existir el proveedor
+    print('\nNo se encontró el proveedor.')
+
+def modificar_proveedor(cuit):
+    #abrimos el archivo excel
+    wb = openpyxl.load_workbook(ARCHIVO_EXCEL)
+    #vamos a la hoja correspondiente
+    hoja = wb[HOJA]
+    #recorremos las filas
+    for fila in hoja.iter_rows(min_row=2):
+        if str(fila[2].value) == cuit:
+            print('\n---Proveedor encontrado.')
+            print(f'  Nombre:   {fila[1].value}')
+            print(f'  CUIT:     {fila[2].value}')
+            print(f'  Rubro:    {fila[3].value}')
+            print(f'  Contacto: {fila[4].value}')
+            print(f'  Email:    {fila[5].value}')
+            print(f'  Teléfono: {fila[6].value}')
+            
+            print('\nEn caso de no querer modificar el campo, dejar vacio y presionar enter.\n')
+            #modificar nombre
+            nombre = input(f'Nuevo nombre [{fila[1].value}]: ').strip().title()
+            if nombre:
+                fila[1].value = nombre
+            #modificar cuit
+            cuit_nuevo = input(f'Nuevo CUIT [{fila[2].value}]: ').strip()
+            if cuit_nuevo:
+                cuit_validado = validar_cuit(cuit_nuevo)
+                if cuit_validado:
+                    fila[2].value = cuit_validado
+                else:
+                    print("CUIT inválido, no se modificó.")
+            #modificar rubro
+            rubro = input(f"Nuevo rubro [{fila[3].value}]: ").strip().title()
+            if rubro:
+                fila[3].value = rubro
+            #modificar contacto
+            contacto = input(f"Nuevo contacto [{fila[4].value}]: ").strip().title()
+            if contacto:
+                fila[4].value = contacto
+            #modificar el email
+            email = input(f"Nuevo email [{fila[5].value}]: ").strip()
+            if email:
+                if validar_email(email):
+                    fila[5].value = email
+                else:
+                    print("Email inválido, no se modificó.")
+            #modificar el telefono
+            telefono = input(f"Nuevo teléfono [{fila[6].value}]: ").strip()
+            if telefono:
+                telefono_validado = validar_telefono(telefono)
+                if telefono_validado:
+                    fila[6].value = telefono_validado
+                else:
+                    print("Teléfono inválido, no se modificó.")
+            #confirmaciñiob
+            while True:
+                confirmar = input("\n¿Confirmás los cambios? (s/n): ").strip().lower()
+                if confirmar == "s":
+                    wb.save(ARCHIVO_EXCEL)
+                    print("\nProveedor actualizado exitosamente.")
+                    return
+                elif confirmar == "n":
+                    print("\nOperación cancelada.")
+                    return
+                else:
+                    print('\nIngresá "s" o "n".')
+    print("\nNo se encontró ningún proveedor con ese CUIT.")
 
 
 #Funcion para el menú
@@ -283,47 +413,105 @@ def menu():
 2. Dar de baja un proveedor
 3. Cambiar estado de un proveedor (Activo/Inactivo)
 4. Ver lista completa de proveedores
-5. Salir
+5. Buscar proveedor por nombre/CUIT
+6. Modificar datos del proveedor
+7. Salir
 """)
-        opcion = input('''Elegí una opción (1/2/3/4/5):
+        opcion = input('''Elegí una opción:
 ''').strip()
+        
         #salir
-        if opcion == '5':
+        if opcion == '7':
             print('Programa finalizado.')
             break
+        
         #alta
         elif opcion == "1":
             alta_proveedor()
+        
         #baja
         elif opcion == "2":
             while True:
-                cuit_input = input("Ingresá el CUIT del proveedor a dar de baja: ").strip()
-                if cuit_input.lower() == "salir":
-                    print("Operación cancelada.")
+                #preguntamos que nos dia el cuit o el nombre de la empresa
+                cuit_nombre = input('\nIngresá el CUIT o nombre del proveedor a dar de baja: ').strip()
+                if cuit_nombre.lower() == 'salir':
+                    print('\nOperación cancelada.')
                     break
-                cuit = validar_cuit(cuit_input)
-                if not cuit:
-                    print("CUIT inválido. Debe tener 11 dígitos numéricos.")
-                    continue
+                #verificamos si es el cuit o el nombre. en caso de ser digit, lo va a tomar como cuit, en caso contrario, como un nombre
+                if cuit_nombre.replace('-','').replace(' ','').isdigit():
+                    #llamamos a la función de validacion de cuit
+                    cuit = validar_cuit(cuit_nombre)
+                    #si el cuit no existe
+                    if not cuit:
+                        print("CUIT inválido. Debe tener 11 dígitos numéricos.")
+                        continue
+                #en caso de que se busque por nombre
+                else:
+                    #llamamos a la función de buscar por nombre
+                    cuit = buscar_por_nombre(cuit_nombre)
+                    #en el caso de que no exista el nombre
+                    if not cuit:
+                        break
+                #si todo está correcto, llamamos a la función para dar de baja al proveedor
                 dar_baja_proveedor(cuit)
                 break
+       
         #reactivación de un proveedor dado de baja
         elif opcion == "3":
             while True:
-                cuit_input = input("Ingresá el CUIT del proveedor a reactivar: ").strip()
-                if cuit_input.lower() == "salir":
-                    print("Operación cancelada.")
+                cuit_nombre = input('\nIngresá el CUIT o el nombre del proveedor a cambiar su estado: ').strip()
+                if cuit_nombre.lower() == 'salir':
+                    print('\nOperación cancelada.')
                     break
-                cuit = validar_cuit(cuit_input)
-                if not cuit:
-                    print("CUIT inválido. Debe tener 11 dígitos numéricos.")
-                    continue
-                reactivar_proveedor(cuit)
+                 #verificamos si es el cuit o el nombre. en caso de ser digit, lo va a tomar como cuit, en caso contrario, como un nombre
+                if cuit_nombre.replace('-','').replace(' ','').isdigit():
+                    #llamamos a la función de validacion de cuit
+                    cuit = validar_cuit(cuit_nombre)
+                    #si el cuit no existe
+                    if not cuit:
+                        print("CUIT inválido. Debe tener 11 dígitos numéricos.")
+                        continue
+                #en caso de que se busque por nombre
+                else:
+                    #llamamos a la función de buscar por nombre
+                    cuit = buscar_por_nombre(cuit_nombre)
+                    #en el caso de que no exista el nombre
+                    if not cuit:
+                        break
+                #si todo está correcto, llamamos a la función para cambiar el estado del proveedor
+                cambiar_estados_proveedor(cuit)
                 break
+        
+        #mostrar lista proveedores
         elif opcion == '4':
             mostrar_proveedores()
+        
+        #Buscar proveedor
+        elif opcion == '5':
+            ver_proveedor()
+
+        #modificacion de los datos del proveedor
+        elif opcion == '6':
+            while True:
+                cuit_nombre = input('\nIngresá el CUIT o nombre del proveedor a modificar: ').strip()
+                if cuit_nombre.lower() == 'salir':
+                    print('\nOperación cancelada.')
+                    break
+                if cuit_nombre.replace('-','').replace(' ','').isdigit():
+                    cuit = validar_cuit(cuit_nombre)
+                    if not cuit:
+                        print("CUIT inválido. Debe tener 11 dígitos numéricos.")
+                        continue
+                else:
+                    cuit = buscar_por_nombre(cuit_nombre)
+                    if not cuit:
+                        break
+                modificar_proveedor(cuit)
+                break
+        
+        #control
         else:
-            print("Opción inválida. Ingresá 1,2,3,4,5.\n")
+            print('\nOpción inválida.\n')
 
 #invocamos a menú
 menu()
