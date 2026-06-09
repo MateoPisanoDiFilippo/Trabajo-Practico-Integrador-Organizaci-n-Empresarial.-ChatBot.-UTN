@@ -511,7 +511,7 @@ def menu():
 
 
         else:
-            print('\nOpción inválida. Ingresá 1,2,3,4,5.\n')
+            print('\nOpción inválida.\n')
 
 #invocamos a menú
 menu()
