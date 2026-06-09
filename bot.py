@@ -120,7 +120,6 @@ def dar_baja_proveedor(cuit):
     #en el caso de que el cuit sea incorrecto
     print("No se encontró ningún proveedor con ese CUIT.") 
 
-
 #para cambiar de estado al proveedor (de activo a inactivo y viceversa)
 def cambiar_estados_proveedor(cuit):
     #abrimos el excel
@@ -353,13 +352,16 @@ def menu():
 """)
         opcion = input('''Elegí una opción (1/2/3/4/5):
 ''').strip()
+        
         #salir
         if opcion == '6':
             print('Programa finalizado.')
             break
+        
         #alta
         elif opcion == "1":
             alta_proveedor()
+        
         #baja
         elif opcion == "2":
             while True:
