@@ -145,9 +145,9 @@ def cambiar_estados_proveedor(cuit):
             print(f"  Estado:   {fila[7].value}")
             print("---------------------------")
             
-            #confirmación antes de reactivar
+            #confirmación antes de cambiar de estado
             while True:
-                confirmar = input("¿Confirmás la reactivación? (s/n): ").strip().lower()
+                confirmar = input("¿Confirmás la acción? (s/n): ").strip().lower()
                 if confirmar == "s":
                     #cambiamos el estado del proveedor al estado contrario.
                     fila[7].value = nuevo_estado  
