@@ -508,8 +508,8 @@ def menu():
                         break
                 modificar_proveedor(cuit)
                 break
-
-
+        
+        #control
         else:
             print('\nOpción inválida.\n')
 
