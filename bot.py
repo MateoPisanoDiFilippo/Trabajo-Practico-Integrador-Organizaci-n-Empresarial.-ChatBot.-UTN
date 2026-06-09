@@ -345,19 +345,30 @@ def menu():
                 #si todo está correcto, llamamos a la función para dar de baja al proveedor
                 dar_baja_proveedor(cuit)
                 break
-
-        
+       
         #reactivación de un proveedor dado de baja
         elif opcion == "3":
             while True:
-                cuit_input = input("Ingresá el CUIT del proveedor a cambiar su estado: ").strip()
-                if cuit_input.lower() == "salir":
-                    print("Operación cancelada.")
+                cuit_nombre = input('\nIngresá el CUIT o el nombre del proveedor a cambiar su estado: ').strip()
+                if cuit_nombre.lower() == 'salir':
+                    print('\nOperación cancelada.')
                     break
-                cuit = validar_cuit(cuit_input)
-                if not cuit:
-                    print("CUIT inválido. Debe tener 11 dígitos numéricos.")
-                    continue
+                 #verificamos si es el cuit o el nombre. en caso de ser digit, lo va a tomar como cuit, en caso contrario, como un nombre
+                if cuit_nombre.replace('-','').replace(' ','').isdigit():
+                    #llamamos a la función de validacion de cuit
+                    cuit = validar_cuit(cuit_nombre)
+                    #si el cuit no existe
+                    if not cuit:
+                        print("CUIT inválido. Debe tener 11 dígitos numéricos.")
+                        continue
+                #en caso de que se busque por nombre
+                else:
+                    #llamamos a la función de buscar por nombre
+                    cuit = buscar_por_nombre(cuit_nombre)
+                    #en el caso de que no exista el nombre
+                    if not cuit:
+                        break
+                #si todo está correcto, llamamos a la función para cambiar el estado del proveedor
                 cambiar_estados_proveedor(cuit)
                 break
         
