@@ -86,9 +86,10 @@ def guardar_proveedor(datos):
     #guardamos los cambios
     wb.save(ARCHIVO_EXCEL)
 
-#para 'dar de baja' a un proveedor (de activo a inactivo)
+#para 'dar de baja' a un proveedor
 def dar_baja_proveedor(cuit):
-    wb = openpyxl.load_workbook(ARCHIVO_EXCEL) #abrimos el excel
+    #abrimos el excel
+    wb = openpyxl.load_workbook(ARCHIVO_EXCEL) 
     #seleccionamos la hoja
     hoja = wb[HOJA] 
     #recorremos las filas
@@ -116,10 +117,11 @@ def dar_baja_proveedor(cuit):
                     return
                 else:
                     print("Ingresá 's' para confirmar o 'n' para cancelar.")
-    print("No se encontró ningún proveedor con ese CUIT.") #en el caso de que el cuit sea incorrecto
-#en lugar de borrar al proveedor, lo pasamos de activo a inactivo, así queda en los datos para futuras referencias.
+    #en el caso de que el cuit sea incorrecto
+    print("No se encontró ningún proveedor con ese CUIT.") 
 
-#para reactivar un proveedor (de inactivo a activo)
+
+#para cambiar de estado al proveedor (de activo a inactivo y viceversa)
 def cambiar_estados_proveedor(cuit):
     #abrimos el excel
     wb = openpyxl.load_workbook(ARCHIVO_EXCEL) 
