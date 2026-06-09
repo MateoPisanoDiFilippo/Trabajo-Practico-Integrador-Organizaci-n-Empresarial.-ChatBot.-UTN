@@ -277,6 +277,18 @@ Estado:       {p['estado']}
 Fecha de alta:{p['fecha_alta']}
 ---------------------------""")
 
+#función para subplir la falla de que solo se busca por CUIT(ahora se podrá buscar por nombre)
+def buscar_por_nombre(nombre_busqueda):
+    proveedores = cargar_proveedores()
+    
+    #recorremos provedores
+    for i in proveedores:
+        if nombre_busqueda.lower() in i['nombre'].lower():
+            return i['cuit']
+    #en caso de que el nombre no esté en la lista
+    print('\nNo se encontró ningún proveedor con ese nombre.')
+    return None
+            
 
 #Funcion para el menú
 def menu():
@@ -310,16 +322,30 @@ def menu():
         #baja
         elif opcion == "2":
             while True:
-                cuit_input = input("Ingresá el CUIT del proveedor a dar de baja: ").strip()
-                if cuit_input.lower() == "salir":
-                    print("Operación cancelada.")
+                #preguntamos que nos dia el cuit o el nombre de la empresa
+                cuit_nombre = input('\nIngresá el CUIT o nombre del proveedor a dar de baja: ').strip()
+                if cuit_nombre.lower() == 'salir':
+                    print('\nOperación cancelada.')
                     break
-                cuit = validar_cuit(cuit_input)
-                if not cuit:
-                    print("CUIT inválido. Debe tener 11 dígitos numéricos.")
-                    continue
+                #verificamos si es el cuit o el nombre. en caso de ser digit, lo va a tomar como cuit, en caso contrario, como un nombre
+                if cuit_nombre.replace('-','').replace(' ','').isdigit():
+                    #llamamos a la función de validacion de cuit
+                    cuit = validar_cuit(cuit_nombre)
+                    #si el cuit no existe
+                    if not cuit:
+                        print("CUIT inválido. Debe tener 11 dígitos numéricos.")
+                        continue
+                #en caso de que se busque por nombre
+                else:
+                    #llamamos a la función de buscar por nombre
+                    cuit = buscar_por_nombre(cuit_nombre)
+                    #en el caso de que no exista el nombre
+                    if not cuit:
+                        break
+                #si todo está correcto, llamamos a la función para dar de baja al proveedor
                 dar_baja_proveedor(cuit)
                 break
+
         
         #reactivación de un proveedor dado de baja
         elif opcion == "3":
