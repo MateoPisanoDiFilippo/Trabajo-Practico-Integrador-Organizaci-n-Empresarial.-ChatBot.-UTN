@@ -292,7 +292,7 @@ def buscar_por_nombre(nombre_busqueda):
 #función para ver un solo proveedor por vez ingresando nombre o cuit
 def ver_proveedor():
     while True:
-        cuit_nombre = input('\nIngresá el CUIT o nombre del proveedor a dar de baja: ').strip().title()         
+        cuit_nombre = input('\nIngresá el CUIT o nombre del proveedor a buscar: ').strip()        
         if cuit_nombre.lower() == 'salir':
                 print('\nOperación cancelada.')
                 break
@@ -364,7 +364,7 @@ def menu():
         elif opcion == "2":
             while True:
                 #preguntamos que nos dia el cuit o el nombre de la empresa
-                cuit_nombre = input('\nIngresá el CUIT o nombre del proveedor a dar de baja: ').strip().title()
+                cuit_nombre = input('\nIngresá el CUIT o nombre del proveedor a dar de baja: ').strip()
                 if cuit_nombre.lower() == 'salir':
                     print('\nOperación cancelada.')
                     break
@@ -390,7 +390,7 @@ def menu():
         #reactivación de un proveedor dado de baja
         elif opcion == "3":
             while True:
-                cuit_nombre = input('\nIngresá el CUIT o el nombre del proveedor a cambiar su estado: ').strip().title()
+                cuit_nombre = input('\nIngresá el CUIT o el nombre del proveedor a cambiar su estado: ').strip()
                 if cuit_nombre.lower() == 'salir':
                     print('\nOperación cancelada.')
                     break
