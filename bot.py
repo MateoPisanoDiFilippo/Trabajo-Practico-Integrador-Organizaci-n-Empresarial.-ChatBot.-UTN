@@ -1,7 +1,7 @@
 '''Trabajo Practico Integrador. Organización Empresarial.
 ChatBot para alta de proveedores.
-(Apellido y nombre de Muriel)
-Pisano Di Filippo Mateo Agustín'''
+Heinzle Muriel Amancay. Comisión 8
+Pisano Di Filippo Mateo Agustín. Comisión 8'''
 
 
 #Importamos la libreria para poder manejar archivos excel
