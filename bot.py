@@ -167,7 +167,7 @@ def alta_proveedor():
     datos = {}
  #nombre
     while True:
-        nombre = input("Nombre o razón social del proveedor: ").strip()
+        nombre = input("Nombre o razón social del proveedor: ").strip().title()
         if nombre.lower() == "salir":
             print("Operación cancelada.")
             return
@@ -193,7 +193,7 @@ def alta_proveedor():
         break
 #rubro
     while True:
-        rubro = input("Rubro: ").strip()
+        rubro = input("Rubro: ").strip().title()
         if rubro.lower() == "salir":
             print("Operación cancelada.")
             return
@@ -204,7 +204,7 @@ def alta_proveedor():
         break
 #contacto
     while True:
-        contacto = input("Nombre de la persona de contacto: ").strip()
+        contacto = input("Nombre de la persona de contacto: ").strip().title()
         if contacto.lower() == "salir":
             print("Operación cancelada.")
             return
@@ -261,7 +261,7 @@ def alta_proveedor():
 def mostrar_proveedores():
     proveedores = cargar_proveedores() 
     if len(proveedores) == 0:
-        print("No hay proveedores cargados en el sistema.")
+        print('No hay proveedores cargados en el sistema.')
         return
     print('''---Lista de Proveedores---''') 
     for p in proveedores: #recorremos el archivo con un for
@@ -288,7 +288,47 @@ def buscar_por_nombre(nombre_busqueda):
     #en caso de que el nombre no esté en la lista
     print('\nNo se encontró ningún proveedor con ese nombre.')
     return None
-            
+
+#función para ver un solo proveedor por vez ingresando nombre o cuit
+def ver_proveedor():
+    while True:
+        cuit_nombre = input('\nIngresá el CUIT o nombre del proveedor a dar de baja: ').strip().title()         
+        if cuit_nombre.lower() == 'salir':
+                print('\nOperación cancelada.')
+                break
+         #verificamos si es el cuit o el nombre. en caso de ser digit, lo va a tomar como cuit, en caso contrario, como un nombre
+        if cuit_nombre.replace('-','').replace(' ','').isdigit():
+            #llamamos a la función de validacion de cuit
+            cuit = validar_cuit(cuit_nombre)
+            #si el cuit no existe
+            if not cuit:
+                print("CUIT inválido. Debe tener 11 dígitos numéricos.")
+                continue
+            #en caso de que se busque por nombre
+        else:
+            cuit = buscar_por_nombre(cuit_nombre)
+            if not cuit:
+                return
+        break
+#buscamos en la lista e imprimimos
+    proveedores = cargar_proveedores()
+    for i in proveedores:
+        if i["cuit"] == cuit:
+            print(f"""
+ID:           {i['id']}
+Nombre:       {i['nombre']}
+CUIT:         {i['cuit']}
+Rubro:        {i['rubro']}
+Contacto:     {i['contacto']}
+Email:        {i['email']}
+Teléfono:     {i['telefono']}
+Estado:       {i['estado']}
+Fecha de alta:{i['fecha_alta']}
+""")
+            return
+    #en el caso de no existir el proveedor
+    print('\nNo se encontró el proveedor.')
+
 
 #Funcion para el menú
 def menu():
@@ -308,12 +348,13 @@ def menu():
 2. Dar de baja un proveedor
 3. Cambiar estado de un proveedor (Activo/Inactivo)
 4. Ver lista completa de proveedores
-5. Salir
+5. Buscar proveedor por nombre/CUIT
+6. Salir
 """)
         opcion = input('''Elegí una opción (1/2/3/4/5):
 ''').strip()
         #salir
-        if opcion == '5':
+        if opcion == '6':
             print('Programa finalizado.')
             break
         #alta
@@ -323,7 +364,7 @@ def menu():
         elif opcion == "2":
             while True:
                 #preguntamos que nos dia el cuit o el nombre de la empresa
-                cuit_nombre = input('\nIngresá el CUIT o nombre del proveedor a dar de baja: ').strip()
+                cuit_nombre = input('\nIngresá el CUIT o nombre del proveedor a dar de baja: ').strip().title()
                 if cuit_nombre.lower() == 'salir':
                     print('\nOperación cancelada.')
                     break
@@ -349,7 +390,7 @@ def menu():
         #reactivación de un proveedor dado de baja
         elif opcion == "3":
             while True:
-                cuit_nombre = input('\nIngresá el CUIT o el nombre del proveedor a cambiar su estado: ').strip()
+                cuit_nombre = input('\nIngresá el CUIT o el nombre del proveedor a cambiar su estado: ').strip().title()
                 if cuit_nombre.lower() == 'salir':
                     print('\nOperación cancelada.')
                     break
@@ -375,8 +416,13 @@ def menu():
         #mostrar lista proveedores
         elif opcion == '4':
             mostrar_proveedores()
+        
+        #Buscar proveedor
+        elif opcion == '5':
+            ver_proveedor()
+
         else:
-            print("Opción inválida. Ingresá 1,2,3,4,5.\n")
+            print('\nOpción inválida. Ingresá 1,2,3,4,5.\n')
 
 #invocamos a menú
 menu()
