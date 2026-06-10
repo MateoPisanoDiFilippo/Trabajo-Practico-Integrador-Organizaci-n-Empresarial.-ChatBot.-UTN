@@ -36,7 +36,7 @@ def cargar_proveedores():
     return proveedores
 
 #funcion para verificar si el proveedor ya está en el sistema:
-#Lo hacemos a través del ciut
+#Lo hacemos a través del cuit
 def proveedor_existe(cuit):
     proveedores = cargar_proveedores()
     for p in proveedores:   #recorre uno por uno cada proveedor
@@ -312,7 +312,7 @@ def ver_proveedor():
 #buscamos en la lista e imprimimos
     proveedores = cargar_proveedores()
     for i in proveedores:
-        if i["cuit"] == cuit:
+        if i["cuit"] == "cuit":
             print(f"""
 ID:           {i['id']}
 Nombre:       {i['nombre']}
