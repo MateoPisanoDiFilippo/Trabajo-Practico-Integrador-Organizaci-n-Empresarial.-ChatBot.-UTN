@@ -290,11 +290,12 @@ def buscar_por_nombre(nombre_busqueda):
 
 #función para ver un solo proveedor por vez ingresando nombre o cuit
 def ver_proveedor():
+    cuit=None # inicializamos acá antes del while
     while True:
         cuit_nombre = input('\nIngresá el CUIT o nombre del proveedor a buscar: ').strip()        
         if cuit_nombre.lower() == 'salir':
                 print('\nOperación cancelada.')
-                break
+                return #Return en lugar de break para salir directo.
          #verificamos si es el cuit o el nombre. en caso de ser digit, lo va a tomar como cuit, en caso contrario, como un nombre
         if cuit_nombre.replace('-','').replace(' ','').isdigit():
             #llamamos a la función de validacion de cuit
@@ -307,12 +308,14 @@ def ver_proveedor():
         else:
             cuit = buscar_por_nombre(cuit_nombre)
             if not cuit:
-                return
+                return #si no encontró por nombre sale.
         break
+    if not cuit:
+        return #reconfirmación, por si no encontró el cuit.
 #buscamos en la lista e imprimimos
     proveedores = cargar_proveedores()
     for i in proveedores:
-        if i["cuit"] == "cuit":
+        if i["cuit"] == cuit:
             print(f"""
 ID:           {i['id']}
 Nombre:       {i['nombre']}
