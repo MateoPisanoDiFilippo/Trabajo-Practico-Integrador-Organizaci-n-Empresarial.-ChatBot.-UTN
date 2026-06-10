@@ -312,7 +312,7 @@ def ver_proveedor():
 #buscamos en la lista e imprimimos
     proveedores = cargar_proveedores()
     for i in proveedores:
-        if i["cuit"] == cuit:
+        if i["cuit"] == "cuit":
             print(f"""
 ID:           {i['id']}
 Nombre:       {i['nombre']}
