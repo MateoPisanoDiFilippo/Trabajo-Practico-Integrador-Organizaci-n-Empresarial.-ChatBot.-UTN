@@ -94,7 +94,7 @@ def dar_baja_proveedor(cuit):
     hoja = wb[HOJA] 
     #recorremos las filas
     for fila in hoja.iter_rows(min_row = 2):
-        if str(fila[2].value) == cuit:
+        if str(fila[2].value).strip().replace("-","").replace(" ","") == cuit.strip():
             #damos los datos al usuario para que lo visualice a la hora de la confirmación.
             print("\n---Proveedor encontrado.") 
             print(f"  Nombre:   {fila[1].value}")
@@ -128,7 +128,7 @@ def cambiar_estados_proveedor(cuit):
     hoja = wb[HOJA] 
     #recorremos las filas
     for fila in hoja.iter_rows(min_row=2):
-        if str(fila[2].value) == cuit:
+        if str(fila[2].value).strip().replace("-","").replace(" ","") == cuit.strip():
             estado_actual = fila[7].value
             if estado_actual == "activo":
                 nuevo_estado = "inactivo"
@@ -338,7 +338,7 @@ def modificar_proveedor(cuit):
     hoja = wb[HOJA]
     #recorremos las filas
     for fila in hoja.iter_rows(min_row=2):
-        if str(fila[2].value) == cuit:
+        if str(fila[2].value).strip().replace("-","").replace(" ","") == cuit.strip():
             print('\n---Proveedor encontrado.')
             print(f'  Nombre:   {fila[1].value}')
             print(f'  CUIT:     {fila[2].value}')
