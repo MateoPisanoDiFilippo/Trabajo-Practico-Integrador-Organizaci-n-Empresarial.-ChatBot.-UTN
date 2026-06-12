@@ -9,7 +9,6 @@ from datetime import date
 ARCHIVO_EXCEL = "proveedores_murmat.xlsx"
 HOJA = "proveedores"
 
-
 # =========================================================
 #  FUNCIONES DE DATOS Y VALIDACIÓN
 # =========================================================
