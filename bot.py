@@ -192,7 +192,7 @@ def manejar_alta_nombre(ctx):
 
 
 def manejar_alta_cuit(ctx):
-    cuit_input = input("CUIT de 11 dígitos, con o sin guiones: ").strip()
+    cuit_input = input("CUIT de 11 dígitos sin guiones: ").strip()
     if cuit_input.lower() == "salir":
         print("Operación cancelada.")
         return "menu"
