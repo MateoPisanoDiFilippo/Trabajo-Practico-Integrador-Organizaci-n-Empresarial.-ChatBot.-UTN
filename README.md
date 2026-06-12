@@ -30,3 +30,9 @@ Sistema de gestión de proveedores desarrollado en Python con backend en Excel (
 ## Búsqueda
 
 En todas las operaciones que requieren identificar un proveedor, se puede ingresar su **CUIT** (con o sin guiones) o su **nombre/razón social**. En cualquier momento se puede escribir `salir` para cancelar la operación.
+
+## Uso de GitHub y PAT
+
+El proyecto fue versionado utilizando Git y GitHub. Para la autenticación se utilizó un Personal Access Token (PAT) de tipofine-graied, configurado unicamente para este repositorio y con permisos mínimos necesarios para lectura y escritura del contenido.
+
+El token fue utilizado solo como credencial de autenticación al realizar operadiones de push mediante HTTPS. No fue incluido en el código fuente ni en los archivos ni en el historial de commits.
