@@ -7,12 +7,9 @@ Pisano Di Filippo Mateo Agustín. Comisión 8'''
 #Importamos la libreria para poder manejar archivos excel
 import openpyxl
 
-#Herramienta que nos permite trabajar con la fecha del día. así incorpora automáticamente cuando se le da el alta al proveedor.
-from datetime import date 
-
-#variables, archivo excel y la hora correspondiente:
-ARCHIVO_EXCEL = "proveedores_murmat.xlsx" 
-HOJA = "proveedores"
+# =========================================================
+#  FUNCIONES DE DATOS Y VALIDACIÓN
+# =========================================================
 
 #función para abrir el excel y cargar a todos los proveedores nuevos a la memoria. Esto nos va a permir verificar cada proveedor para comparar con la nueva entrada
 def cargar_proveedores():
